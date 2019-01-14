@@ -1,0 +1,11 @@
+enum Greeting {
+    NONE = 0;
+    MR = 1;
+    MRS = 2;
+    MISS = 3;
+}
+
+message Hello {
+    required Greeting greeting = 1;
+    required string name = 2;
+}
