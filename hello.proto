@@ -1,3 +1,4 @@
+syntax = "proto2";
 enum Greeting {
     NONE = 0;
     MR = 1;
@@ -8,4 +9,9 @@ enum Greeting {
 message Hello {
     required Greeting greeting = 1;
     required string name = 2;
+}
+
+service HelloMars {
+  // Sends a greeting
+  rpc SayHello (Hello) returns (Hello) {}
 }

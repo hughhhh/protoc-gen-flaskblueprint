@@ -5,7 +5,7 @@ import itertools
 import json
 
 from google.protobuf.compiler import plugin_pb2 as plugin
-from google.protobuf.descriptor_pb2 import DescriptorProto, EnumDescriptorProto
+from google.protobuf.descriptor_pb2 import DescriptorProto, EnumDescriptorProto, ServiceDescriptorProto
 
 
 def traverse(proto_file):
@@ -24,9 +24,11 @@ def traverse(proto_file):
                     for nested_item in _traverse(nested, nested_package):
                         yield nested_item, nested_package
 
+    # https://developers.google.com/protocol-buffers/docs/reference/python/google.protobuf.descriptor_pb2.FileDescriptorProto-class
     return itertools.chain(
         _traverse(proto_file.package, proto_file.enum_type),
         _traverse(proto_file.package, proto_file.message_type),
+        _traverse(proto_file.package, proto_file.service),
     )
 
 def generate_code(request, response):
@@ -53,6 +55,18 @@ def generate_code(request, response):
                     'type': 'Enum',
                     'values': [{'name': v.name, 'value': v.number}
                                for v in item.value]
+                })
+
+            elif isinstance(item, ServiceDescriptorProto):
+                # print("****")
+                # print(item)
+                # print("****")
+                data.update({
+                    'type': 'Service',
+                    # 'method_name': item.method[0].name,
+                    'methods': [{'name': rpc.name, 'input': rpc.input_type,
+                                 'output': rpc.output_type}
+                                for rpc in item.method]
                 })
 
             output.append(data)

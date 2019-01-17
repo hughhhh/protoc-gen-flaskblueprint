@@ -38,5 +38,18 @@
     "type": "Message", 
     "name": "Hello", 
     "package": "&lt;root&gt;"
+  }, 
+  {
+    "methods": [
+      {
+        "input": ".Hello", 
+        "name": "SayHello", 
+        "output": ".Hello"
+      }
+    ], 
+    "filename": "hello.proto", 
+    "type": "Service", 
+    "name": "HelloMars", 
+    "package": "&lt;root&gt;"
   }
 ]

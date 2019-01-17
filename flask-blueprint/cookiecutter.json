@@ -1,0 +1,12 @@
+{
+ "blueprint_name": "my_blueprint",
+ "app_dir": "my_app",
+ "services": {
+      "test": {
+        "input": "test1",
+        "message_name": "test2",
+        "output": "test3",
+        "service_name": "test4"
+      }
+  }
+}
