@@ -1,0 +1,84 @@
+{
+  "messages": [
+    {
+      "properties": [
+        {
+          "type": 11, 
+          "name": "rules"
+        }, 
+        {
+          "type": 8, 
+          "name": "fully_decode_reserved_expansion"
+        }
+      ], 
+      "filename": "google/api/http.proto", 
+      "type": "Message", 
+      "name": "Http", 
+      "package": "google.api"
+    }, 
+    {
+      "properties": [
+        {
+          "type": 9, 
+          "name": "selector"
+        }, 
+        {
+          "type": 9, 
+          "name": "get"
+        }, 
+        {
+          "type": 9, 
+          "name": "put"
+        }, 
+        {
+          "type": 9, 
+          "name": "post"
+        }, 
+        {
+          "type": 9, 
+          "name": "delete"
+        }, 
+        {
+          "type": 9, 
+          "name": "patch"
+        }, 
+        {
+          "type": 11, 
+          "name": "custom"
+        }, 
+        {
+          "type": 9, 
+          "name": "body"
+        }, 
+        {
+          "type": 9, 
+          "name": "response_body"
+        }, 
+        {
+          "type": 11, 
+          "name": "additional_bindings"
+        }
+      ], 
+      "filename": "google/api/http.proto", 
+      "type": "Message", 
+      "name": "HttpRule", 
+      "package": "google.api"
+    }, 
+    {
+      "properties": [
+        {
+          "type": 9, 
+          "name": "kind"
+        }, 
+        {
+          "type": 9, 
+          "name": "path"
+        }
+      ], 
+      "filename": "google/api/http.proto", 
+      "type": "Message", 
+      "name": "CustomHttpPattern", 
+      "package": "google.api"
+    }
+  ]
+}

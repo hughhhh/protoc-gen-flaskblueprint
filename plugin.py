@@ -1,19 +1,18 @@
 #!/usr/bin/env python
-
+from collections import defaultdict
 import sys
 import itertools
 import json
 
 # Example for looking up docs: https://developers.google.com/protocol-buffers/docs/reference/python/google.protobuf.descriptor_pb2.FileDescriptorProto
 from google.protobuf.compiler import plugin_pb2 as plugin
-from google.protobuf.descriptor_pb2 import DescriptorProto, EnumDescriptorProto, ServiceDescriptorProto
+from google.protobuf.descriptor_pb2 import DescriptorProto, EnumDescriptorProto, ServiceDescriptorProto, MethodDescriptorProto
 
 def traverse(proto_file):
-
     def _traverse(package, items):
+
         for item in items:
             yield item, package
-
             if isinstance(item, DescriptorProto):
                 for enum in item.enum_type:
                     yield enum, package
@@ -24,6 +23,8 @@ def traverse(proto_file):
                     for nested_item in _traverse(nested, nested_package):
                         yield nested_item, nested_package
 
+            if isinstance(item, MethodDescriptorProto):
+                print(type(item))
     # https://developers.google.com/protocol-buffers/docs/reference/python/google.protobuf.descriptor_pb2.FileDescriptorProto-class
     return itertools.chain(
         _traverse(proto_file.package, proto_file.enum_type),
@@ -33,17 +34,23 @@ def traverse(proto_file):
 
 def generate_code(request, response):
     for proto_file in request.proto_file:
-        output = []
-
+        output = defaultdict(list)
         # Parse request
         for item, package in traverse(proto_file):
+            proto_type = None
+            try:
+                name = item.name
+            except Exception:
+                name = 'no name'
+
             data = {
                 'package': proto_file.package or '&lt;root&gt;',
                 'filename': proto_file.name,
-                'name': item.name,
+                'name': name,
             }
 
             if isinstance(item, DescriptorProto):
+                proto_type = 'messages'
                 data.update({
                     'type': 'Message',
                     'properties': [{'name': f.name, 'type': int(f.type)}
@@ -51,6 +58,7 @@ def generate_code(request, response):
                 })
 
             elif isinstance(item, EnumDescriptorProto):
+                proto_type = 'enums'
                 data.update({
                     'type': 'Enum',
                     'values': [{'name': v.name, 'value': v.number}
@@ -58,18 +66,20 @@ def generate_code(request, response):
                 })
 
             elif isinstance(item, ServiceDescriptorProto):
-                # print("****")
-                # print(item)
-                # print("****")
+                """
+                todo(hugh): Figure out how to traverse the http options section
+                right now the options json is empty and not returning anything
+                """
+                proto_type = 'services'
                 data.update({
                     'type': 'Service',
-                    # 'method_name': item.method[0].name,
                     'methods': [{'name': rpc.name, 'input': rpc.input_type,
                                  'output': rpc.output_type}
-                                for rpc in item.method]
+                                for rpc in item.method],
+                    'options': None,
                 })
 
-            output.append(data)
+            output[proto_type].append(data)
 
         # Fill response
         f = response.file.add()
@@ -94,5 +104,4 @@ if __name__ == '__main__':
     # Serialise response message
     output = response.SerializeToString()
 
-    # Write to stdout
     sys.stdout.write(output)

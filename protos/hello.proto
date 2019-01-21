@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package hello;
+
+import "google/api/annotations.proto";
+
+enum Greeting {
+    NONE = 0;
+    MR = 1;
+    MRS = 2;
+    MISS = 3;
+}
+
+message HelloRequest {
+    Greeting greeting = 1;
+    string name = 2;
+}
+
+message ReplyHello {
+    Greeting greeting = 1;
+    string name = 2;
+}
+
+service HelloMars {
+  // Sends a greeting
+  rpc SayHello (HelloRequest) returns (ReplyHello) {
+    option (google.api.http) = {
+      get: "/v1/{name=hello/*}"
+    };
+  }
+}
