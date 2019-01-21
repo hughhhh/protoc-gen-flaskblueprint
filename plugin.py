@@ -4,9 +4,9 @@ import sys
 import itertools
 import json
 
+# Example for looking up docs: https://developers.google.com/protocol-buffers/docs/reference/python/google.protobuf.descriptor_pb2.FileDescriptorProto
 from google.protobuf.compiler import plugin_pb2 as plugin
 from google.protobuf.descriptor_pb2 import DescriptorProto, EnumDescriptorProto, ServiceDescriptorProto
-
 
 def traverse(proto_file):
 
